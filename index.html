@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        button{
+            font-size: 1.1rem;
+            margin: 0.5rem;
+            border-radius: 50%;
+            background-color: rgb(44, 211, 22);
+            border: none;
+        }
+        .flex {
+            display: flex;
+
+        }
+
+        input {
+            width: 15rem;
+            height: 2rem;
+            margin-left: 3rem;
+            font-size: 1.2rem;
+        }
+
+
+        li {
+            list-style: none;
+            margin-left: -1.8rem;
+        }
+
+        #first {
+            background-color: aquamarine;
+            width: 18rem;
+            height: 25rem;
+            margin: 6px;
+            font-size: 1.3rem;
+
+
+        }
+
+        #second {
+            background-color: aquamarine;
+            width: 18rem;
+            height: 25rem;
+            margin: 6px;
+            font-size: 1.3rem;
+            display: block;
+
+        }
+     
+    </style>
+</head>
+
+<body>
+
+    <input type="text" id="input" onchange="myfunction2(this)">
+
+
+    <div class="flex">
+        <div id="first">
+            <ul id="ul2">
+                <li class="li">list item 1</li>
+                <li class="li">list item 2</li>
+                <li class="li">list item 3</li>
+                <li class="li">list item 4</li>
+                <li class="li">list item 5</li>
+                <li class="li">list item 6</li>
+                <li class="li">list item 7</li>
+                <li class="li">list item 8</li>
+                <li class="li">list item 9</li>
+                <li class="li">list item 10</li>
+            </ul>
+        </div>
+        <div id="second">
+            <ul id="ul"></ul>
+        </div>
+    </div>
+    <script>
+        let second = document.getElementById("second")
+        let input = document.getElementById("input")
+        let ul = document.getElementById("ul")
+       let first =document.getElementById("first")
+        function myfunction2() {
+            let val=input.value
+            let li = document.createElement("li")
+            li.appendChild(document.createTextNode(val))
+            let button=document.createElement("button")
+            button.innerHTML="x"
+            li.appendChild(button);
+             ul.appendChild(li);
+             
+            button.addEventListener("click",()=>{
+                ul.removeChild(li)
+            })
+            }
+    //   let x=first.textContent
+    //   second.innerHTML=x 
+    //   let y=ul.textContent
+    //   first.innerHTML=y 
+      
+   
+    </script>
+</body>
+
+</html>

@@ -5,101 +5,230 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@1,300&display=swap');
+        </style>
     <title>Document</title>
     <style>
-        button{
-            font-size: 1.1rem;
-            margin: 0.5rem;
-            border-radius: 50%;
-            background-color: rgb(44, 211, 22);
-            border: none;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
         }
-        .flex {
-            display: flex;
 
+        #second button {
+            font-size: 1.1rem;
+            margin-left: 1rem;
+            border-radius: 0.5rem;
+            background-color: transparent;
+            border: none;
+            float: right;
+            padding: 0.4rem;
         }
 
         input {
-            width: 15rem;
-            height: 2rem;
-            margin-left: 3rem;
+            width: 74%;
+            height: 3.4rem;
+            margin-top: 1.7rem;
+            padding-left: 1rem;
             font-size: 1.2rem;
+            border: none;
         }
-
+        #input:focus, #input:active{
+            border: none;
+            outline: none;
+        }
 
         li {
             list-style: none;
-            margin-left: -1.8rem;
+            width: 100%;
+            padding: 1rem;
+            margin-left: -1rem;
+
+            
+
         }
 
-        #first {
-            background-color: aquamarine;
-            width: 18rem;
-            height: 25rem;
-            margin: 6px;
-            font-size: 1.3rem;
+        ul li:hover {
+            background: #ddd;
+        }
 
-
+        li:nth-child(odd) {
+            background: #f9f9f9;
         }
 
         #second {
-            background-color: aquamarine;
-            width: 18rem;
-            height: 25rem;
-            margin: 6px;
+
+
+            width: 100%;
+            height: auto;
             font-size: 1.3rem;
-            display: block;
 
         }
-     
+
+       
+        .head {
+            
+            width: 100%;
+            height: 12rem;
+            background-color: #f44336;
+            margin: auto;
+        }
+        
+        .button {
+            width: 25%;
+            height: 100%;
+            margin-left: -0.4rem;
+            margin-top: -1rem;
+            font-size: 1.2rem;
+            background: #d9d9d9;
+            transition: 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .button:hover {
+            background-color: #bbb;
+        }
+
+        .inputdiv {
+            width: 80vw;
+            margin: auto;
+            height: 3.4rem;
+        }
+
+        .heading {
+            padding-top: 2rem;
+            text-align: center;
+            margin-bottom: -0.5rem;
+            color: white;
+        }
+
+        
+
+        ul .done {
+            background-color: #888;
+            color: white;
+            text-decoration: line-through;
+            color: white;
+        }
+        #ul{
+            margin-top: 1rem;
+        }
+        .after{
+            background-color: white;
+            color: white;
+            z-index: 2;
+        }
+        .task{
+            display: inline;
+        }
+        
+
+       
+        
+       
+      
+
+        
     </style>
 </head>
 
-<body>
-
-    <input type="text" id="input" onchange="myfunction2(this)">
-
-
-    <div class="flex">
-        <div id="first">
-            <ul id="ul2">
-                <li class="li">list item 1</li>
-                <li class="li">list item 2</li>
-                <li class="li">list item 3</li>
-                <li class="li">list item 4</li>
-                <li class="li">list item 5</li>
-                <li class="li">list item 6</li>
-                <li class="li">list item 7</li>
-                <li class="li">list item 8</li>
-                <li class="li">list item 9</li>
-                <li class="li">list item 10</li>
-            </ul>
-        </div>
-        <div id="second">
-            <ul id="ul"></ul>
+<body onload="loaded()">
+    <div class="head">
+        <h1 class="heading">My ToDo List</h1>
+        <div class="inputdiv">
+            <input type="text" id="input" placeholder="Title.." onchange="addTask()">
+            <button class="button">Add</button onclick="addTask()">
         </div>
     </div>
+    <div id="second">
+        <ul id="ul">
+        </ul>
+    </div>
     <script>
-        let second = document.getElementById("second")
-        let input = document.getElementById("input")
-        let ul = document.getElementById("ul")
-       let first =document.getElementById("first")
-        function myfunction2() {
-            let val=input.value
-            let li = document.createElement("li")
-            li.appendChild(document.createTextNode(val))
-            let button=document.createElement("button")
-            button.innerHTML="x"
-            li.appendChild(button);
-            ul.appendChild(li);
-             input.value=""
-            button.addEventListener("click",()=>{
-                ul.removeChild(li)
-            })
+        function loaded(){
+            document.getElementById("input").focus()
         }
-    
-      
-   
+        function setTask() {
+            localStorage.setItem("tasks", JSON.stringify(tasks))
+        }
+        const uniqueId = () => {
+            const dateString = Date.now().toString(36);
+            const randomness = Math.random().toString(36).substr(2);
+            return dateString + randomness;
+        };
+        let input = document.getElementById("input")
+        let list = document.getElementById("ul")
+        let li = document.getElementsByTagName("li")
+        let buttons = document.getElementsByClassName("delete")
+        let ls = localStorage.getItem("tasks")
+        let tasks = ls ? JSON.parse(ls) : []
+        function addTask() {
+            let task = {
+                name: input.value,
+                status: "undone",
+                id: uniqueId()
+            }
+            tasks.push(task)
+            setTask()
+            location.reload()
+            loaded()
+        }
+        tasks.forEach(task => {
+            let li = document.createElement("li")
+            let span = document.createElement("p")
+            span.innerHTML = task.name
+            span.className="task"
+            li.append(span)
+            let button = document.createElement("button")
+            button.innerHTML = "x"
+            button.className="delete"
+            button.id = task.id
+            li.append(button)
+            list.append(li)
+        });
+        Array.from(buttons).forEach(button => {
+            button.addEventListener("click", (e) => {
+                let index;
+                tasks.forEach(task => {
+                     index = tasks.findIndex((task) => task.id== e.target.id);
+                  })
+                tasks.splice(index,1)
+                setTask()
+                location.reload()
+
+            })
+        })
+        Array.from(li).forEach(element => {
+            element.addEventListener("click", (e) => {
+                index = e.target.lastChild.id
+                tasks.forEach(task => {
+                    if (task.id == index) {
+                        if (task.status == "done") {
+                            task.status = "undone"
+                        }
+                        else {
+                            task.status = "done"
+                        }
+                        setTask()
+                        location.reload()
+                    }
+                   
+                })
+            })
+        })
+        tasks.forEach(task => {
+            if (task.status == "done") {
+                let index = task.id
+                Array.from(li).forEach(element => {
+                    if (element.lastChild.id == index) {
+                        element.className = "done"
+                        element.lastChild.classList.toggle("after")
+                    }
+                })
+            }
+        })
     </script>
 </body>
 

@@ -8,6 +8,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@1,300&display=swap');
         </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <title>Document</title>
     <style>
         * {
@@ -123,18 +124,10 @@
         .task{
             display: inline;
         }
-        
-
-       
-        
-       
-      
-
-        
-    </style>
+      </style>
 </head>
 
-<body onload="loaded()">
+<body>
     <div class="head">
         <h1 class="heading">My ToDo List</h1>
         <div class="inputdiv">
@@ -147,9 +140,6 @@
         </ul>
     </div>
     <script>
-        function loaded(){
-            document.getElementById("input").focus()
-        }
         function setTask() {
             localStorage.setItem("tasks", JSON.stringify(tasks))
         }
@@ -158,10 +148,9 @@
             const randomness = Math.random().toString(36).substr(2);
             return dateString + randomness;
         };
-        let input = document.getElementById("input")
-        let list = document.getElementById("ul")
-        let li = document.getElementsByTagName("li")
-        let buttons = document.getElementsByClassName("delete")
+        $("document").ready(function(){
+            $("#input").focus()
+        })
         let ls = localStorage.getItem("tasks")
         let tasks = ls ? JSON.parse(ls) : []
         function addTask() {
@@ -173,62 +162,63 @@
             tasks.push(task)
             setTask()
             location.reload()
-            loaded()
         }
         tasks.forEach(task => {
-            let li = document.createElement("li")
-            let span = document.createElement("p")
-            span.innerHTML = task.name
-            span.className="task"
+            let li = $("<li></li>")
+            let span = $("<span></span>")
+            span.html(task.name)
+            span.addClass("task")
             li.append(span)
-            let button = document.createElement("button")
-            button.innerHTML = "x"
-            button.className="delete"
-            button.id = task.id
+            let button = $("<button></button>")
+            button.html("x")
+            button.addClass("delete")
+            button.attr( "id" ,task.id)
             li.append(button)
-            list.append(li)
+            $("#ul").append(li)
+
         });
-        Array.from(buttons).forEach(button => {
-            button.addEventListener("click", (e) => {
+        $(".delete").each(function(){
+            $(this).click(function(e){
                 let index;
                 tasks.forEach(task => {
                      index = tasks.findIndex((task) => task.id== e.target.id);
                   })
-                tasks.splice(index,1)
-                setTask()
+                  tasks.splice(index,1)
+                setTask() 
                 location.reload()
-
             })
         })
-        Array.from(li).forEach(element => {
-            element.addEventListener("click", (e) => {
-                index = e.target.lastChild.id
-                tasks.forEach(task => {
+    $("li").each(function(){
+        $(this).click(function(){
+            index = $(this).find("button").attr("id")
+             tasks.forEach(task => {
                     if (task.id == index) {
                         if (task.status == "done") {
                             task.status = "undone"
                         }
                         else {
-                            task.status = "done"
+                        task.status = "done"
                         }
                         setTask()
                         location.reload()
                     }
                    
                 })
-            })
         })
-        tasks.forEach(task => {
-            if (task.status == "done") {
+    })
+tasks.forEach(function(task){
+    if (task.status == "done") {
                 let index = task.id
-                Array.from(li).forEach(element => {
-                    if (element.lastChild.id == index) {
-                        element.className = "done"
-                        element.lastChild.classList.toggle("after")
+                $("li").each(function(){
+                    if ($(this).find("button").attr("id") == index) {
+                        $(this).addClass("done")
+                        $(this).find("button").toggleClass("after")
                     }
                 })
             }
-        })
+})
+
+
     </script>
 </body>
 

@@ -7,9 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@1,300&display=swap');
-        </style>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <title>Document</title>
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <title>ToDo-List</title>
     <style>
         * {
             box-sizing: border-box;
@@ -17,14 +17,12 @@
             font-family: 'Roboto', sans-serif;
         }
 
-        #second button {
+        #list button {
             font-size: 1.1rem;
             margin-left: 1rem;
-            border-radius: 0.5rem;
             background-color: transparent;
             border: none;
             float: right;
-            padding: 0.4rem;
         }
 
         input {
@@ -35,7 +33,9 @@
             font-size: 1.2rem;
             border: none;
         }
-        #input:focus, #input:active{
+
+        #input:focus,
+        #input:active {
             border: none;
             outline: none;
         }
@@ -45,9 +45,7 @@
             width: 100%;
             padding: 1rem;
             margin-left: -1rem;
-
-            
-
+            font-size: 1.3rem;
         }
 
         ul li:hover {
@@ -58,25 +56,12 @@
             background: #f9f9f9;
         }
 
-        #second {
-
-
-            width: 100%;
-            height: auto;
-            font-size: 1.3rem;
-
-        }
-
-       
-        .head {
-            
-            width: 100%;
+        .header {
             height: 12rem;
             background-color: #f44336;
-            margin: auto;
         }
-        
-        .button {
+
+        .inp-container button {
             width: 25%;
             height: 100%;
             margin-left: -0.4rem;
@@ -88,24 +73,22 @@
             border: none;
         }
 
-        .button:hover {
+        .inp-container button:hover {
             background-color: #bbb;
         }
 
-        .inputdiv {
+        .inp-container {
             width: 80vw;
             margin: auto;
             height: 3.4rem;
         }
 
-        .heading {
+        .header h1 {
             padding-top: 2rem;
             text-align: center;
             margin-bottom: -0.5rem;
             color: white;
         }
-
-        
 
         ul .done {
             background-color: #888;
@@ -113,32 +96,29 @@
             text-decoration: line-through;
             color: white;
         }
-        #ul{
+
+        #list {
             margin-top: 1rem;
         }
-        .after{
+
+        .after {
             background-color: white;
             color: white;
             z-index: 2;
         }
-        .task{
-            display: inline;
-        }
-      </style>
+    </style>
 </head>
 
 <body>
-    <div class="head">
-        <h1 class="heading">My ToDo List</h1>
-        <div class="inputdiv">
+    <div class="header">
+        <h1>My ToDo List</h1>
+        <div class="inp-container">
             <input type="text" id="input" placeholder="Title.." onchange="addTask()">
-            <button class="button">Add</button onclick="addTask()">
+            <button>Add</button onclick="addTask()">
         </div>
     </div>
-    <div id="second">
-        <ul id="ul">
-        </ul>
-    </div>
+    <ul id="list">
+    </ul>
     <script>
         function setTask() {
             localStorage.setItem("tasks", JSON.stringify(tasks))
@@ -148,11 +128,10 @@
             const randomness = Math.random().toString(36).substr(2);
             return dateString + randomness;
         };
-        $("document").ready(function(){
+        $("document").ready(function () {
             $("#input").focus()
         })
-        let ls = localStorage.getItem("tasks")
-        let tasks = ls ? JSON.parse(ls) : []
+        let tasks = localStorage.getItem("tasks") ? JSON.parse(localStorage.getItem("tasks")) : []
         function addTask() {
             let task = {
                 name: input.value,
@@ -172,53 +151,50 @@
             let button = $("<button></button>")
             button.html("x")
             button.addClass("delete")
-            button.attr( "id" ,task.id)
+            button.attr("id", task.id)
             li.append(button)
-            $("#ul").append(li)
+            $("#list").append(li)
 
         });
-        $(".delete").each(function(){
-            $(this).click(function(e){
+        $(".delete").each(function () {
+            $(this).click(function (e) {
                 let index;
                 tasks.forEach(task => {
-                     index = tasks.findIndex((task) => task.id== e.target.id);
-                  })
-                  tasks.splice(index,1)
-                setTask() 
+                    index = tasks.findIndex((task) => task.id == e.target.id);
+                })
+                tasks.splice(index, 1)
+                setTask()
                 location.reload()
             })
         })
-    $("li").each(function(){
-        $(this).click(function(){
-            index = $(this).find("button").attr("id")
-             tasks.forEach(task => {
+        $("li").each(function () {
+            $(this).click(function () {
+                index = $(this).find("button").attr("id")
+                tasks.forEach(task => {
                     if (task.id == index) {
                         if (task.status == "done") {
                             task.status = "undone"
                         }
                         else {
-                        task.status = "done"
+                            task.status = "done"
                         }
                         setTask()
                         location.reload()
                     }
-                   
                 })
+            })
         })
-    })
-tasks.forEach(function(task){
-    if (task.status == "done") {
+        tasks.forEach(function (task) {
+            if (task.status == "done") {
                 let index = task.id
-                $("li").each(function(){
+                $("li").each(function () {
                     if ($(this).find("button").attr("id") == index) {
                         $(this).addClass("done")
                         $(this).find("button").toggleClass("after")
                     }
                 })
             }
-})
-
-
+        })
     </script>
 </body>
 

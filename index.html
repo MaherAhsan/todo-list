@@ -1,201 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<style>
+			@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@1,300&display=swap");
+		</style>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+		<title>ToDo-List</title>
+		<style>
+			* {
+				box-sizing: border-box;
+				margin: 0;
+				font-family: "Roboto", sans-serif;
+			}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@1,300&display=swap');
-    </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <title>ToDo-List</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            font-family: 'Roboto', sans-serif;
-        }
+			#list button {
+				font-size: 1.1rem;
+				margin-left: 1rem;
+				background-color: transparent;
+				border: none;
+				float: right;
+			}
 
-        #list button {
-            font-size: 1.1rem;
-            margin-left: 1rem;
-            background-color: transparent;
-            border: none;
-            float: right;
-        }
+			input {
+				width: 74%;
+				height: 3.4rem;
+				margin-top: 1.7rem;
+				padding-left: 1rem;
+				font-size: 1.2rem;
+				border: none;
+			}
 
-        input {
-            width: 74%;
-            height: 3.4rem;
-            margin-top: 1.7rem;
-            padding-left: 1rem;
-            font-size: 1.2rem;
-            border: none;
-        }
+			#input:focus,
+			#input:active {
+				border: none;
+				outline: none;
+			}
 
-        #input:focus,
-        #input:active {
-            border: none;
-            outline: none;
-        }
+			li {
+				list-style: none;
+				width: 100%;
+				padding: 1rem;
+				margin-left: -1rem;
+				font-size: 1.3rem;
+			}
 
-        li {
-            list-style: none;
-            width: 100%;
-            padding: 1rem;
-            margin-left: -1rem;
-            font-size: 1.3rem;
-        }
+			ul li:hover {
+				background: #ddd;
+			}
 
-        ul li:hover {
-            background: #ddd;
-        }
+			li:nth-child(odd) {
+				background: #f9f9f9;
+			}
 
-        li:nth-child(odd) {
-            background: #f9f9f9;
-        }
+			.header {
+				height: 12rem;
+				background-color: #f44336;
+			}
 
-        .header {
-            height: 12rem;
-            background-color: #f44336;
-        }
+			.inp-container button {
+				width: 25%;
+				height: 100%;
+				margin-left: -0.4rem;
+				margin-top: -1rem;
+				font-size: 1.2rem;
+				background: #d9d9d9;
+				transition: 0.3s;
+				cursor: pointer;
+				border: none;
+			}
 
-        .inp-container button {
-            width: 25%;
-            height: 100%;
-            margin-left: -0.4rem;
-            margin-top: -1rem;
-            font-size: 1.2rem;
-            background: #d9d9d9;
-            transition: 0.3s;
-            cursor: pointer;
-            border: none;
-        }
+			.inp-container button:hover {
+				background-color: #bbb;
+			}
 
-        .inp-container button:hover {
-            background-color: #bbb;
-        }
+			.inp-container {
+				width: 80vw;
+				margin: auto;
+				height: 3.4rem;
+			}
 
-        .inp-container {
-            width: 80vw;
-            margin: auto;
-            height: 3.4rem;
-        }
+			.header h1 {
+				padding-top: 2rem;
+				text-align: center;
+				margin-bottom: -0.5rem;
+				color: white;
+			}
 
-        .header h1 {
-            padding-top: 2rem;
-            text-align: center;
-            margin-bottom: -0.5rem;
-            color: white;
-        }
+			ul .done {
+				background-color: #888;
+				color: white;
+				text-decoration: line-through;
+				color: white;
+			}
 
-        ul .done {
-            background-color: #888;
-            color: white;
-            text-decoration: line-through;
-            color: white;
-        }
+			#list {
+				margin-top: 1rem;
+			}
 
-        #list {
-            margin-top: 1rem;
-        }
+			.after {
+				background-color: white;
+				color: white;
+				z-index: 2;
+			}
+		</style>
+	</head>
 
-        .after {
-            background-color: white;
-            color: white;
-            z-index: 2;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="header">
-        <h1>My ToDo List</h1>
-        <div class="inp-container">
-            <input type="text" id="input" placeholder="Title.." onchange="addTask()">
-            <button>Add</button onclick="addTask()">
-        </div>
-    </div>
-    <ul id="list">
-    </ul>
-    <script>
-        function setTask() {
-            localStorage.setItem("tasks", JSON.stringify(tasks))
-        }
-        const uniqueId = () => {
-            const dateString = Date.now().toString(36);
-            const randomness = Math.random().toString(36).substr(2);
-            return dateString + randomness;
-        };
-        $("document").ready(function () {
-            $("#input").focus()
-        })
-        let tasks = localStorage.getItem("tasks") ? JSON.parse(localStorage.getItem("tasks")) : []
-        function addTask() {
-            let task = {
-                name: input.value,
-                status: "undone",
-                id: uniqueId()
-            }
-            tasks.push(task)
-            setTask()
-            location.reload()
-        }
-        tasks.forEach(task => {
-            let li = $("<li></li>")
-            let span = $("<span></span>")
-            span.html(task.name)
-            span.addClass("task")
-            li.append(span)
-            let button = $("<button></button>")
-            button.html("x")
-            button.addClass("delete")
-            button.attr("id", task.id)
-            li.append(button)
-            $("#list").append(li)
-
-        });
-        $(".delete").each(function () {
-            $(this).click(function (e) {
-                let index;
-                tasks.forEach(task => {
-                    index = tasks.findIndex((task) => task.id == e.target.id);
-                })
-                tasks.splice(index, 1)
-                setTask()
-                location.reload()
-            })
-        })
-        $("li").each(function () {
-            $(this).click(function () {
-                index = $(this).find("button").attr("id")
-                tasks.forEach(task => {
-                    if (task.id == index) {
-                        if (task.status == "done") {
-                            task.status = "undone"
-                        }
-                        else {
-                            task.status = "done"
-                        }
-                        setTask()
-                        location.reload()
-                    }
-                })
-            })
-        })
-        tasks.forEach(function (task) {
-            if (task.status == "done") {
-                let index = task.id
-                $("li").each(function () {
-                    if ($(this).find("button").attr("id") == index) {
-                        $(this).addClass("done")
-                        $(this).find("button").toggleClass("after")
-                    }
-                })
-            }
-        })
-    </script>
-</body>
-
+	<body>
+		<div class="header">
+			<h1>My ToDo List</h1>
+			<div class="inp-container">
+				<input
+					type="text"
+					id="input"
+					placeholder="Title.."
+					onchange="addTask()"
+				/>
+				<button onclick="addTask()">Add</button>
+			</div>
+		</div>
+		<ul id="list"></ul>
+		<script>
+			function setTask() {
+				localStorage.setItem("tasks", JSON.stringify(tasks));
+			}
+			const uniqueId = () => {
+				const dateString = Date.now().toString(36);
+				const randomness = Math.random().toString(36).substr(2);
+				return dateString + randomness;
+			};
+			$("document").ready(function () {
+				$("#input").focus();
+			});
+			let tasks = localStorage.getItem("tasks")
+				? JSON.parse(localStorage.getItem("tasks"))
+				: [];
+			function addTask() {
+				let task = {
+					name: $("#input").val(),
+					status: "undone",
+					id: uniqueId(),
+				};
+				const isFound = tasks.some((element) => {
+					console.log(element);
+					if (element.name === task.name) {
+						return true;
+					}
+					return false;
+				});
+				if (isFound === false) {
+					tasks.push(task);
+					setTask();
+					location.reload();
+				} else {
+					$("#input").val("");
+				}
+			}
+			tasks.forEach((task) => {
+				let li = $("<li></li>");
+				let span = $("<span></span>");
+				span.html(task.name);
+				span.addClass("task");
+				li.append(span);
+				let button = $("<button></button>");
+				button.html("x");
+				button.addClass("delete");
+				button.attr("id", task.id);
+				li.append(button);
+				$("#list").append(li);
+			});
+			$(".delete").each(function () {
+				$(this).click(function (e) {
+					let index;
+					tasks.forEach((task) => {
+						index = tasks.findIndex((task) => task.id == e.target.id);
+					});
+					tasks.splice(index, 1);
+					setTask();
+					location.reload();
+				});
+			});
+			$("li").each(function () {
+				$(this).click(function () {
+					index = $(this).find("button").attr("id");
+					tasks.forEach((task) => {
+						if (task.id == index) {
+							if (task.status == "done") {
+								task.status = "undone";
+							} else {
+								task.status = "done";
+							}
+							setTask();
+							location.reload();
+						}
+					});
+				});
+			});
+			tasks.forEach(function (task) {
+				if (task.status == "done") {
+					let index = task.id;
+					$("li").each(function () {
+						if ($(this).find("button").attr("id") == index) {
+							$(this).addClass("done");
+							$(this).find("button").toggleClass("after");
+						}
+					});
+				}
+			});
+		</script>
+	</body>
 </html>
